@@ -286,6 +286,9 @@
 <body>
     
     <audio id="background-music" src="bgm33.mp3" autoplay loop></audio>
+    <audio id="feed-sound" src="feed_sound.mp3"></audio> 
+    <audio id="restart-sound" src="restart_sound.mp3"></audio> 
+    <audio id="pet-sound" src="pet_sound.mp3"></audio> 
 
     
     <div id="intro-screen">
@@ -379,6 +382,9 @@
         const timerDisplay = document.getElementById('growth-timer-display');
         const growthProgressBar = document.getElementById('growth-progress-bar');
         const bgm = document.getElementById('background-music');
+        const feedSound = document.getElementById('feed-sound'); 
+        const restartSound = document.getElementById('restart-sound'); // 🌟 추가 🌟
+        const petSound = document.getElementById('pet-sound');       // 🌟 추가 🌟
         
         let originalFeedListener = null;
 
@@ -520,6 +526,12 @@
         function handlePetting() { 
             statusMessage.textContent = '목소리가 머릿속으로 흘러들어온다.';
             
+            // 🌟 만지는 소리 재생 🌟
+            if (petSound) {
+                petSound.currentTime = 0; 
+                petSound.play().catch(error => console.log("Pet sound playback failed:", error));
+            }
+            
             showRandomDialogue(); 
             ensureBgmPlays(); 
             
@@ -568,6 +580,12 @@
             
             if (currentStage === CREATURE_IMAGES.length - 1) return; 
 
+            // 🌟 영양 주입 소리 재생 🌟
+            if (feedSound) {
+                feedSound.currentTime = 0; // 재생 위치를 처음으로 돌림
+                feedSound.play().catch(error => console.log("Sound playback failed:", error));
+            }
+
             feedNeeded = false;
             updateStatusMessage(); 
 
@@ -612,9 +630,19 @@
         }
 
         function restartGame() {
+            // 🌟 재시작 소리 재생 🌟
+            if (restartSound) {
+                restartSound.currentTime = 0; 
+                restartSound.play().catch(error => console.log("Restart sound playback failed:", error));
+            }
+            
             document.body.style.filter = 'none'; 
             if (bgm) bgm.pause(); 
-            window.location.reload(); 
+            
+            // 소리 재생을 위해 잠시 딜레이를 준 후 페이지 새로고침
+            setTimeout(() => {
+                window.location.reload(); 
+            }, 300); 
         }
 
         function ensureBgmPlays() {
